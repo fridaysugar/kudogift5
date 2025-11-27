@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+}
+.choose{
+  padding:10px 14px;        
+  border:none;               
+  border-radius:10px;        
+  background:#ff6600;  
+  color:#ffffff;                
+  font-weight:600;           
+  cursor:pointer;  /* ←ここを pointer に変更 */
+}
+
+.choose:hover {
+  background:#ff5500; /* ホバー時の色を変える場合はここ */
+}
+
+.choose[disabled]{
+  background:#bfbfbf;        
+  cursor:not-allowed;        
+}

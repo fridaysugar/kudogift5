@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>セレクト独断ギフト（グリッド表示）</title>
+  <style>
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --accent:#2463eb; --muted:#666;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#111}
+    .wrap{max-width:980px;margin:28px auto;padding:18px}
+    h1{text-align:center;margin:6px 0 18px;font-size:24px
+    }
+    sub-text {
+  font-size:16px; /* 説明文だけ小さくする */
+  line-height:1.4; /* 行間も少し広げると読みやすい */
+}
+
+    #selectedMessage{margin:12px 0;text-align:center;color:#bb2d3b}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(45%,1fr));
+      gap:16px;
+    }
+    .item{
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      text-align:center;
+    }
+    .item img{
+      width:100%;
+      height:auto;
+      border-radius:10px;
+      margin-bottom:10px;
+    }
+    .item h2{margin:6px 0;font-size:18px}
+    .item p{margin:4px 0 12px;color:var(--muted); font-size:14px}
+    .choose { 
+      padding:10px 14px;
+      border:none;
+      border-radius:10px;
+      background:#ff6600;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+    }
+    .choose:hover {
+      background:#ff2a00;
+    }
+    .choose[disabled] {
+      background:#bfbfbf;
+      cursor:not-allowed;
+    }
+    
+
+    @media(max-width:500px){
+      .grid{grid-template-columns:repeat(1,1fr);}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>セレクト独断ギフト<br><br>
+        商品を一つお選びなっせ<br>
+        わたしが独断で調達して、後日ギフトするわよ<br>
+        ※チャンスは一度だけよ。よく考えて…ね。
+    </h1>
+    <div id="selectedMessage"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    const ITEMS = [
+      {id:1, name:"ガチャガチャ", img:"img/item1.gif", desc:"独断で何かしらのガチャガチャをやってくるわよ"},
+      {id:2, name:"毛糸", img:"img/item2.gif", desc:"独断で毛糸を買ってくるわよ"},
+      {id:3, name:"果物", img:"img/item3.gif", desc:"独断で何かしらの果物を調達してくるわよ"},
+      {id:4, name:"うまい棒", img:"img/item4.gif", desc:"独断でうまい棒を買ってくるわよ"},
+      {id:5, name:"中古小説", img:"img/item5.gif", desc:"独断でブックオフで何かしらの小説を買ってくるわよ"},
+      {id:6, name:"飴", img:"img/item6.gif", desc:"独断で選んだ飴をネックレスにしてくるわよ"},
+      {id:7, name:"調味料", img:"img/item7.gif", desc:"独断で何かしらの調味料を調達してくるわよ"},
+      {id:8, name:"どこかのお店のギフト券", img:"img/item8.gif", desc:"独断でどこかのお店のギフト券を差し上げるわよ"},
+      {id:9, name:"おもちゃ", img:"img/item9.gif", desc:"独断で何かしらのおもちゃを調達してくるわよ"},
+      {id:10, name:"置物", img:"img/item10.gif", desc:"独断で何かしらの置物を調達してくるわよ"},
+      {id:11, name:"LINEスタンプ", img:"img/item11.gif", desc:"独断で何かしらのLINEスタンプを差し上げるわよ"},
+      {id:12, name:"お花", img:"img/item12.gif", desc:"独断でお花を買ってくるわよ"},
+      {id:13, name:"野菜", img:"img/item13.gif", desc:"独断で何かしら野菜を買ってくるわよ"},
+      {id:14, name:"シール", img:"img/item14.gif", desc:"独断で何かしらのシールを調達してくるわよ"}
+    ];
+
+    const FORM_URL = "https://docs.google.com/forms/d/e/1Vh6kZcFi0TyN1tHqR9Nll9azM5HEkJZPWKlSU1r8jw4/viewform";
+    const FORM_ENTRY = "entry.1383662310";
+
+    const grid = document.getElementById('grid');
+
+    ITEMS.forEach(it => {
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <img src="${it.img}" alt="${it.name}">
+        <h2>${it.name}</h2>
+        <p>${it.desc}</p>
+        <button class="choose" onclick="selectItem(${it.id})">これを選ぶ</button>
+      `;
+      grid.appendChild(div);
+    });
+
+    function selectItem(id){
+  const it = ITEMS.find(x => x.id === id);
+  if(!it) return;
+
+  // GoogleフォームのURLにパラメータを付けて送信
+  // FORM_URL は /viewform のURLを使用
+  const url = FORM_URL + '?' + FORM_ENTRY + '=' + encodeURIComponent(it.name);
+
+  // ページを移動して送信（Googleフォームの完了ページに行く）
+  window.location.href = url;
+}
+
+
+
+    window.selectItem = selectItem;
+  </script>
+</body>
+</html>
