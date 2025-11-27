@@ -87,21 +87,28 @@
         <img src="${it.img}" alt="${it.name}">
         <h2>${it.name}</h2>
         <p>${it.desc}</p>
-        <button class="choose" onclick="selectItem(${it.id})">これを選ぶ</button>
+        <button class="choose" onclick="selectItem(1)">これを選ぶ</button>
       `;
       grid.appendChild(div);
     });
 
     function selectItem(id){
-      const it = ITEMS.find(x => x.id === id);
-      if(!it) return;
+  const it = ITEMS.find(x => x.id === id);
+  if(!it) return;
 
-      // hidden input に選択値をセットして submit
-      document.getElementById('giftInput').value = it.name;
-      document.getElementById('giftForm').submit();
-    }
+  // Googleフォームの viewform URL
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd1MN38AmVi5FMAQ5W46S-Ga8sryt6wjG2kHpJK6GvvC-f4wA//viewform';
 
-    window.selectItem = selectItem;
-  </script>
+  // entry番号
+  const FORM_ENTRY = 'entry.1383662310'; // 自分のフォームの entry番号に置き換える
+
+  // 選択したギフトをパラメータにしてリダイレクト
+  const url = FORM_URL + '?' + FORM_ENTRY + '=' + encodeURIComponent(it.name);
+
+  // フォームページに移動
+  window.location.href = url;
+}
+</script>
+
 </body>
 </html>
