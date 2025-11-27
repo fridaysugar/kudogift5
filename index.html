@@ -9,17 +9,11 @@
       --bg:#f6f7fb; --card:#ffffff; --accent:#2463eb; --muted:#666;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#111}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#111}
     .wrap{max-width:980px;margin:28px auto;padding:18px}
-    h1{text-align:center;margin:6px 0 18px;font-size:24px
-    }
-    sub-text {
-  font-size:16px; /* 説明文だけ小さくする */
-  line-height:1.4; /* 行間も少し広げると読みやすい */
-}
-
+    h1{text-align:center;margin:6px 0 18px;font-size:24px}
+    .sub-text { font-size:16px; line-height:1.4; }
     #selectedMessage{margin:12px 0;text-align:center;color:#bb2d3b}
-
     .grid{
       display:grid;
       grid-template-columns:repeat(auto-fill,minmax(45%,1fr));
@@ -34,14 +28,9 @@
       box-shadow:0 4px 12px rgba(0,0,0,0.08);
       text-align:center;
     }
-    .item img{
-      width:100%;
-      height:auto;
-      border-radius:10px;
-      margin-bottom:10px;
-    }
-    .item h2{margin:6px 0;font-size:18px}
-    .item p{margin:4px 0 12px;color:var(--muted); font-size:14px}
+    .item img{width:100%; height:auto; border-radius:10px; margin-bottom:10px;}
+    .item h2{margin:6px 0;font-size:18px;}
+    .item p{margin:4px 0 12px;color:var(--muted); font-size:14px;}
     .choose { 
       padding:10px 14px;
       border:none;
@@ -51,18 +40,8 @@
       font-weight:600;
       cursor:pointer;
     }
-    .choose:hover {
-      background:#ff2a00;
-    }
-    .choose[disabled] {
-      background:#bfbfbf;
-      cursor:not-allowed;
-    }
-    
-
-    @media(max-width:500px){
-      .grid{grid-template-columns:repeat(1,1fr);}
-    }
+    .choose:hover { background:#ff2a00; }
+    @media(max-width:500px){ .grid{grid-template-columns:1fr;} }
   </style>
 </head>
 <body>
@@ -70,11 +49,16 @@
     <h1>セレクト独断ギフト<br><br>
         商品を一つお選びなっせ<br>
         わたしが独断で調達して、後日ギフトするわよ<br>
-        ※チャンスは一度だけよ。よく考えて…ね。
+        <span class="sub-text">※チャンスは一度だけよ。よく考えて…ね。</span>
     </h1>
     <div id="selectedMessage"></div>
     <div class="grid" id="grid"></div>
   </div>
+
+  <!-- 自動送信用フォーム（非表示） -->
+  <form id="giftForm" action="https://docs.google.com/forms/d/e/1Vh6kZcFi0TyN1tHqR9Nll9azM5HEkJZPWKlSU1r8jw4/formResponse" method="POST" style="display:none;">
+    <input type="hidden" name="entry.1383662310" id="giftInput">
+  </form>
 
   <script>
     const ITEMS = [
@@ -94,9 +78,6 @@
       {id:14, name:"シール", img:"img/item14.gif", desc:"独断で何かしらのシールを調達してくるわよ"}
     ];
 
-    const FORM_URL = "https://docs.google.com/forms/d/e/1Vh6kZcFi0TyN1tHqR9Nll9azM5HEkJZPWKlSU1r8jw4/viewform";
-    const FORM_ENTRY = "entry.1383662310";
-
     const grid = document.getElementById('grid');
 
     ITEMS.forEach(it => {
@@ -112,18 +93,13 @@
     });
 
     function selectItem(id){
-  const it = ITEMS.find(x => x.id === id);
-  if(!it) return;
+      const it = ITEMS.find(x => x.id === id);
+      if(!it) return;
 
-  // GoogleフォームのURLにパラメータを付けて送信
-  // FORM_URL は /viewform のURLを使用
-  const url = FORM_URL + '?' + FORM_ENTRY + '=' + encodeURIComponent(it.name);
-
-  // ページを移動して送信（Googleフォームの完了ページに行く）
-  window.location.href = url;
-}
-
-
+      // hidden input に選択値をセットして submit
+      document.getElementById('giftInput').value = it.name;
+      document.getElementById('giftForm').submit();
+    }
 
     window.selectItem = selectItem;
   </script>
