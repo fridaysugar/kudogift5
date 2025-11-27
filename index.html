@@ -14,31 +14,17 @@
     h1{text-align:center;margin:6px 0 18px;font-size:24px}
     .sub-text { font-size:16px; line-height:1.4; }
     #selectedMessage{margin:12px 0;text-align:center;color:#bb2d3b}
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(45%,1fr));
-      gap:16px;
-    }
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(45%,1fr)); gap:16px;}
     .item{
-      background:var(--card);
-      border-radius:12px;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      box-shadow:0 4px 12px rgba(0,0,0,0.08);
-      text-align:center;
+      background:var(--card); border-radius:12px; padding:12px;
+      display:flex; flex-direction:column; box-shadow:0 4px 12px rgba(0,0,0,0.08); text-align:center;
     }
     .item img{width:100%; height:auto; border-radius:10px; margin-bottom:10px;}
     .item h2{margin:6px 0;font-size:18px;}
     .item p{margin:4px 0 12px;color:var(--muted); font-size:14px;}
     .choose { 
-      padding:10px 14px;
-      border:none;
-      border-radius:10px;
-      background:#ff6600;
-      color:#fff;
-      font-weight:600;
-      cursor:pointer;
+      padding:10px 14px; border:none; border-radius:10px; background:#ff6600;
+      color:#fff; font-weight:600; cursor:pointer;
     }
     .choose:hover { background:#ff2a00; }
     @media(max-width:500px){ .grid{grid-template-columns:1fr;} }
@@ -46,21 +32,18 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>セレクト独断ギフト<br><br>
-        商品を一つお選びなっせ<br>
-        わたしが独断で調達して、後日ギフトするわよ<br>
-        <span class="sub-text">※チャンスは一度だけよ。よく考えて…ね。</span>
+    <h1>
+      セレクト独断ギフト<br><br>
+      商品を一つお選びなっせ<br>
+      わたしが独断で調達して、後日ギフトするわよ<br>
+      <span class="sub-text">※チャンスは一度だけよ。よく考えて…ね。</span>
     </h1>
     <div id="selectedMessage"></div>
     <div class="grid" id="grid"></div>
   </div>
 
-  <!-- 自動送信用フォーム（非表示） -->
-  <form id="giftForm" action="https://docs.google.com/forms/d/e/1Vh6kZcFi0TyN1tHqR9Nll9azM5HEkJZPWKlSU1r8jw4/formResponse" method="POST" style="display:none;">
-    <input type="hidden" name="entry.1383662310" id="giftInput">
-  </form>
-
   <script>
+    // ギフトリスト
     const ITEMS = [
       {id:1, name:"ガチャガチャ", img:"img/item1.gif", desc:"独断で何かしらのガチャガチャをやってくるわよ"},
       {id:2, name:"毛糸", img:"img/item2.gif", desc:"独断で毛糸を買ってくるわよ"},
@@ -80,6 +63,7 @@
 
     const grid = document.getElementById('grid');
 
+    // ギフトカードを生成
     ITEMS.forEach(it => {
       const div = document.createElement('div');
       div.className = 'item';
@@ -87,28 +71,31 @@
         <img src="${it.img}" alt="${it.name}">
         <h2>${it.name}</h2>
         <p>${it.desc}</p>
-        <button class="choose" onclick="selectItem(1)">これを選ぶ</button>
+        <button class="choose" onclick="selectItem(${it.id})">これを選ぶ</button>
       `;
       grid.appendChild(div);
     });
 
+    // 選択したギフトをGoogleフォームに送信
     function selectItem(id){
-  const it = ITEMS.find(x => x.id === id);
-  if(!it) return;
+      const it = ITEMS.find(x => x.id === id);
+      if(!it) return;
 
-  // Googleフォームの viewform URL
-  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd1MN38AmVi5FMAQ5W46S-Ga8sryt6wjG2kHpJK6GvvC-f4wA//viewform';
+      // Googleフォームの viewform URL（末尾の /viewform を1つに修正）
+      const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd1MN38AmVi5FMAQ5W46S-Ga8sryt6wjG2kHpJK6GvvC-f4wA/viewform';
 
-  // entry番号
-  const FORM_ENTRY = 'entry.1383662310'; // 自分のフォームの entry番号に置き換える
+      // 質問項目の entry番号
+      const FORM_ENTRY = 'entry.1383662310'; // 自分のフォームの番号に置き換える
 
-  // 選択したギフトをパラメータにしてリダイレクト
-  const url = FORM_URL + '?' + FORM_ENTRY + '=' + encodeURIComponent(it.name);
+      // GETパラメータでフォームに値をセットして開く
+      const url = FORM_URL + '?' + FORM_ENTRY + '=' + encodeURIComponent(it.name);
 
-  // フォームページに移動
-  window.location.href = url;
-}
-</script>
+      // フォームページに移動（ユーザーは送信ボタンを押す）
+      window.location.href = url;
+    }
+
+    window.selectItem = selectItem;
+  </script>
 
 </body>
 </html>
